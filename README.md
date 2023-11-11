@@ -2,12 +2,12 @@
 
 # Parser for Rust source code
 
-- GITHUB:[https://github.com/DavydKod/person_struct_parser]
-- CRATES.IO:[https://crates.io/crates/person_struct_parser]
+- GITHUB: https://github.com/DavydKod/person_struct_parser
+- CRATES.IO: https://crates.io/crates/person_struct_parser
 
 Person_struct_parser(PSP) is a parsing library for parsing a String into a person object.
 
-- PSP has structure **Person**[`person_struct_parser::person_module::Person`] for containing the information about a person(name,age,city)
+- PSP has structure **Person**(`person_struct_parser::person_module::Person`) for containing the information about a person(name,age,city)
 
 ```rust
 pub struct Person {
@@ -17,17 +17,17 @@ pub struct Person {
     }
 ```
 
-- Function [person_struct_parser::person_module::parse] is implemented for [Person], it's main method for parsing [String] into the [Person] object:
+- Function `person_struct_parser::person_module::parse` is implemented for **Person**, it's main method for parsing **String** into the **Person** object:
 
 ```rust
 pub fn parse(string: &str) -> anyhow::Result<Person>
 ```
 
-- [`std::fmt::Display`] is implemented for [`Person`]
-- There is function [`person_struct_parser::person_module::normalize`] implemented for [Person] to reduce object data to \*_normal form_:
+- `std::fmt::Display` is implemented for **Person**
+- There is function `person_struct_parser::person_module::normalize` implemented for **Person** to reduce object data to **normal form**:
 
 ```rust
 pub fn normalize(&mut self) -> &mut Self
 ```
 
-- The \*_grammar_ for parsing is placed in [grammar.pest] file in [src] folder.
+- The **grammar** for parsing is placed in `grammar.pest` file in `src` folder.

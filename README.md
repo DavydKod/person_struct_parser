@@ -1,12 +1,26 @@
-# Person_Parser
+# person_struct_parser
 
-Rust_parser
+# Parser for Rust source code
 
-This crate is for parsing strings into Person objects.
-Person structure contains the information about name(String), age(u32) and city(String).
+GITHUB:[https://github.com/DavydKod/person_struct_parser]
+CRATES.IO:[https://crates.io/crates/person_struct_parser]
+
+Person_struct_parser(PSP) is a parsing library for parsing a String into a person object.
+
+- PSP has structure **Person**[`person_struct_parser::person_module::Person`] for containing the information about a person(name,age,city)
 
 ```rust
-fn to_string(&self) -> String
+pub struct Person {
+        pub name: String,
+        pub age: u32,
+        pub city: String,
+    }
+```
+
+- Person structure contains the information about name(String), age(u32) and city(String).
+
+```rust
+
 ```
 
 This method is implemented for Person to transform this into the String.

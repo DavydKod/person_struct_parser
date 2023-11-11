@@ -1,5 +1,5 @@
 [package]
-name = "person_parser"
+name = "person_struct_parser"
 version = "0.1.0"
 edition = "2021"
 description = "Rust parser"

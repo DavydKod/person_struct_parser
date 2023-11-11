@@ -1,4 +1,4 @@
-use person_parser::person_module::*;
+use person_struct_parser::person_module::*;
 
 #[cfg(test)]
 mod simple_tests {

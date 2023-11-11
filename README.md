@@ -31,3 +31,13 @@ pub fn normalize(&mut self) -> &mut Self
 ```
 
 - The **grammar** for parsing is placed in `grammar.pest` file in `src` folder.
+
+```pest
+alpha = { 'a'..'z' | 'A'..'Z' }
+digit = { '0'..'9' }
+
+name = {(alpha)+}
+age = {(digit)+}
+city = {(alpha)+}
+person = {name~age~city}
+```

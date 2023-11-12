@@ -1,7 +1,8 @@
 alpha = { 'a'..'z' | 'A'..'Z' }
 digit = { '0'..'9' }
+all_characters = {.+}
 
-name = {(alpha)+}
-age = {(digit)+}
-city = {(alpha)+}
-person = {name~age~city}
+name = {(all_characters)+ ~ (alpha)+ ~ (all_characters)+}
+age = {(all_characters)+ ~ (digit)+ ~ (all_characters)+}
+city = {(all_characters)+ ~ (alpha)+ ~ (all_characters)+}
+person = {name ~ age ~ city}

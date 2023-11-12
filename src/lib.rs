@@ -1,5 +1,14 @@
 pub mod person_module {
     use anyhow::anyhow;
+    use thiserror::Error;
+
+    #[derive(Error, Debug)]
+    pub enum MyError {
+        #[error("An error occurred: {0}")]
+        PSPError(String),
+        #[error("An error occurred incorrect field: {0}")]
+        IncorrectField(String),
+    }
 
     pub struct Person {
         pub name: String,
@@ -13,7 +22,6 @@ pub mod person_module {
     }
 
     impl Person {
-        
         pub fn normalize(&mut self) -> &mut Self {
             if !self.name.is_empty() {
                 let s = self.name.chars().next().unwrap().to_ascii_uppercase();
@@ -50,16 +58,16 @@ pub mod person_module {
                     has_age = true;
                 }
             } else if has_age && !has_city && s.is_ascii_alphabetic() {
-                    has_city = true;
+                has_city = true;
             }
         }
 
         if !has_age {
-            return Err(anyhow!("String has incorrect age"));
+            return Err(anyhow!(MyError::IncorrectField("age".to_string())));
         } else if !has_city {
-            return Err(anyhow!("String has incorrect city"));
+            return Err(anyhow!(MyError::IncorrectField("city".to_string())));
         } else if !has_name {
-            return Err(anyhow!("String has incorrect name"));
+            return Err(anyhow!(MyError::IncorrectField("name".to_string())));
         }
 
         let mut must_be_name = true;
@@ -98,14 +106,18 @@ pub mod person_module {
         }
 
         if tage.is_empty() {
-            return Err(anyhow!("String has incorrect age"));
+            return Err(anyhow!(MyError::IncorrectField("age".to_string())));
         } else if tcity.is_empty() {
-            return Err(anyhow!("String has incorrect city"));
+            return Err(anyhow!(MyError::IncorrectField("city".to_string())));
         } else if tname.is_empty() {
-            return Err(anyhow!("String has incorrect name"));
+            return Err(anyhow!(MyError::IncorrectField("name".to_string())));
         }
 
-        let norm_age: u32 = tage.parse::<u32>().unwrap();
+        let unnorm_age = tage.parse::<u32>();
+        let norm_age: u32 = unnorm_age.map_err(|_| {
+            let err = MyError::PSPError("Invalid parsing".to_string());
+            anyhow!(err)
+        })?;
 
         Ok(Person {
             name: tname,

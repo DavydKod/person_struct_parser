@@ -24,20 +24,21 @@ pub fn parse(string: &str) -> anyhow::Result<Person>
 ```
 
 - `std::fmt::Display` is implemented for **Person**
-- There is function `person_struct_parser::person_module::normalize` implemented for **Person** to reduce object data to **normal form**:
+- There is a function `person_struct_parser::person_module::normalize` implemented for **Person** to reduce object data to **normal form**:
 
 ```rust
 pub fn normalize(&mut self) -> &mut Self
 ```
 
-- The **grammar** for parsing is placed in `grammar.pest` file in `src` folder.
+- The **grammar** for parsing is placed in `grammar.pest` file in `src` folder. Grammar:
 
 ```pest
 alpha = { 'a'..'z' | 'A'..'Z' }
 digit = { '0'..'9' }
+all_characters = {.+}
 
-name = {(alpha)+}
-age = {(digit)+}
-city = {(alpha)+}
-person = {name~age~city}
+name = {(all_characters)+ ~ (alpha)+ ~ (all_characters)+}
+age = {(all_characters)+ ~ (digit)+ ~ (all_characters)+}
+city = {(all_characters)+ ~ (alpha)+ ~ (all_characters)+}
+person = {name ~ age ~ city}
 ```

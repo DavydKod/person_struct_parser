@@ -1,6 +1,6 @@
 [package]
 name = "person_struct_parser"
-version = "0.4.1"
+version = "0.4.2"
 edition = "2021"
 description = "Rust parser for person struct  #parser #grammar #person_struct"
 license = "MIT"
@@ -9,5 +9,6 @@ license = "MIT"
 
 [dependencies]
 anyhow = "1.0.75"
+clap = "2.33.3"
 fmt = "0.1.0"
 thiserror = "1.0.50"

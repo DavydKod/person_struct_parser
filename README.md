@@ -36,10 +36,13 @@ pub fn parse(string: &str) -> anyhow::Result<Person>
 ```pest
 alpha = { 'a'..'z' | 'A'..'Z' }
 digit = { '0'..'9' }
-all_characters = {.+}
+non_digit = { !digit ~ . }
+non_alpha = { !alpha ~ . }
+all_characters_without_digits = { non_digit+ }
+all_characters_without_alpha = { non_alpha+ }
 
-name = {(all_characters)+ ~ (alpha)+ ~ (all_characters)+}
-age = {(all_characters)+ ~ (digit)+ ~ (all_characters)+}
-city = {(all_characters)+ ~ (alpha)+ ~ (all_characters)+}
+name = {(all_characters_without_digits)+ ~ (alpha)+ ~ (all_characters_without_digits)+}
+age = {(all_characters_without_alpha)+ ~ (digit)+ ~ (all_characters_without_alpha)+}
+city = {(all_characters_without_digits)+ ~ (alpha)+ ~ (all_characters_without_digits)+}
 person = {name ~ age ~ city}
 ```

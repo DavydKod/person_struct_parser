@@ -1,7 +1,9 @@
+///Main module that contains all useful elements like Person struct, parse func etc
 pub mod person_module {
     use anyhow::anyhow;
     use thiserror::Error;
 
+    ///My error type using thiserror to handle error situations
     #[derive(Error, Debug)]
     pub enum MyError {
         #[error("An error occurred: {0}")]
@@ -12,8 +14,11 @@ pub mod person_module {
 
     ///A struct to contain the information about a person such as name, age and city
     pub struct Person {
+        ///name of the person
         pub name: String,
+        ///age of the person
         pub age: u32,
+        ///city where the person lives
         pub city: String,
     }
     impl std::fmt::Display for Person {

@@ -6,4 +6,5 @@ pub fn main() {
         age: 25,
         city: String::from("Kyiv"),
     };
+    println!("Welcome!");
 }

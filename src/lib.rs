@@ -10,6 +10,7 @@ pub mod person_module {
         IncorrectField(String),
     }
 
+    ///A struct to contain the information about a person such as name, age and city
     pub struct Person {
         pub name: String,
         pub age: u32,
@@ -22,6 +23,7 @@ pub mod person_module {
     }
 
     impl Person {
+        ///A function to reduce Person object to normal view
         pub fn normalize(&mut self) -> &mut Self {
             if !self.name.is_empty() {
                 let s = self.name.chars().next().unwrap().to_ascii_uppercase();
@@ -38,7 +40,7 @@ pub mod person_module {
             self
         }
     }
-
+    ///Main function to parse String object into the Person object(with normalization)
     pub fn parse(string: &str) -> anyhow::Result<Person> {
         let mut tname = String::from("");
         let mut tage = String::from("");
@@ -118,11 +120,12 @@ pub mod person_module {
             let err = MyError::PSPError("Invalid parsing".to_string());
             anyhow!(err)
         })?;
-
-        Ok(Person {
+        let mut person = Person {
             name: tname,
             age: norm_age,
             city: tcity,
-        })
+        };
+        person.normalize();
+        Ok(person)
     }
 }

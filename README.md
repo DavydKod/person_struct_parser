@@ -17,18 +17,19 @@ pub struct Person {
     }
 ```
 
-- Function `person_struct_parser::person_module::parse` is implemented for **Person**, it's main method for parsing **String** into the **Person** object:
+- There is a function `person_struct_parser::person_module::normalize` implemented for **Person** to reduce object data to **normal form**:
+
+```rust
+pub fn normalize(&mut self) -> &mut Self
+```
+
+- Function `person_struct_parser::person_module::parse` is implemented for **Person**, it's main method for parsing **String** into the **Person** object with normalization:
 
 ```rust
 pub fn parse(string: &str) -> anyhow::Result<Person>
 ```
 
 - `std::fmt::Display` is implemented for **Person**
-- There is a function `person_struct_parser::person_module::normalize` implemented for **Person** to reduce object data to **normal form**:
-
-```rust
-pub fn normalize(&mut self) -> &mut Self
-```
 
 - The **grammar** for parsing is placed in `grammar.pest` file in `src` folder. Grammar:
 

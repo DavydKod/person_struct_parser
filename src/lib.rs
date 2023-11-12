@@ -6,8 +6,10 @@ pub mod person_module {
     ///My error type using thiserror to handle error situations
     #[derive(Error, Debug)]
     pub enum MyError {
+        ///Global error of parsing
         #[error("An error occurred: {0}")]
         PSPError(String),
+        ///Error for the situation when the field from input string is incorrect
         #[error("An error occurred incorrect field: {0}")]
         IncorrectField(String),
     }

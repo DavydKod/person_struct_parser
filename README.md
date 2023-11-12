@@ -1,6 +1,6 @@
 # person_struct_parser
 
-# Parser for Rust source code
+## Parser for Rust source code
 
 - GITHUB: https://github.com/DavydKod/person_struct_parser
 - CRATES.IO: https://crates.io/crates/person_struct_parser
@@ -46,3 +46,24 @@ age = {(all_characters_without_alpha)+ ~ (digit)+ ~ (all_characters_without_alph
 city = {(all_characters_without_digits)+ ~ (alpha)+ ~ (all_characters_without_digits)+}
 person = {name ~ age ~ city}
 ```
+
+## Example
+
+- **Normalization**. To normalize person object. Next example will print `Roman-21-Paris`:
+
+```rust
+let mut person = Person{name:String::from("RoMAn"),age:21,city:String::from("PaRiS")};
+println!("{}",person.normalize());
+```
+
+- **Parsing**. Next example will print `Roman-21-Paris` because of parsing and normalization after:
+
+```rust
+println!("{}",parse("-+Ro*Ma/N//2*+-1..PaR*I-s-").unwrap());
+```
+
+- **CLI**. You can execute `cargo run -- -i your_file_name.txt` in command prompt to parse the content of your file. If there is a problem it will parse the appropriate default file. Also there are more commands - try `cargo run -- --help` for more info.
+
+## Custom Error
+
+There is a custom error enum type using `thiserror` crate for parsing. For more look the documentation

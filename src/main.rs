@@ -7,14 +7,14 @@ use std::fs;
 pub fn main() -> Result<(), std::io::Error> {
     let matches = App::new("My CLI Program")
         .version("1.0")
-        .author("Your Name")
-        .about("Опис вашої програми")
+        .author("DavydKod")
+        .about("CLI for parsing content of the file")
         .arg(
             Arg::with_name("input")
                 .short("i")
                 .long("input")
                 .value_name("FILE")
-                .help("Вкажіть вхідний файл")
+                .help("Enter your input file. If it is incorrect then the default file will be parsed")
                 .takes_value(true),
         )
         .get_matches();
@@ -28,8 +28,8 @@ pub fn main() -> Result<(), std::io::Error> {
     };
 
     match parse(&file_content) {
-        Ok(result) => println!("Успішно розпарсено: {}", result),
-        Err(err) => eprintln!("Помилка під час парсингу: {:?}", err),
+        Ok(result) => println!("Parsed successfully parsed: {}", result),
+        Err(err) => eprintln!("Error during the parsing: {:?}", err),
     }
     Ok(())
 }

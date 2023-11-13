@@ -6,9 +6,31 @@ mod difficult_tests {
 
     #[test]
     fn parsing_unnormal() -> anyhow::Result<()> {
-        let person = parse("Dav-+yd-2/0Lv/iv")?;
+        let person = parse("Dav-+yd-2/0Lv/iv75hgf86l+9")?;
         println!("{}", person.to_string());
-        assert_eq!(person.to_string(), "Davyd-20-Lviv");
+        assert_eq!(person.to_string(), "Davyd-20-Lviv75869");
+        Ok(())
+    }
+    #[test]
+    fn parsing_unnormal3() -> anyhow::Result<()> {
+        let person = parse("Dav-+yd-2/0Lv/iv75hgf86l+984")?;
+        println!("{}", person.to_string());
+        assert_eq!(person.to_string(), "Davyd-20-Lviv00000");
+        Ok(())
+    }
+    #[test]
+    fn parsing_unnormal4() -> anyhow::Result<()> {
+        let person = parse("Dav-+yd-2/0terN-+OP/iL75hgf8l+")?;
+        println!("{}", person.to_string());
+        assert_eq!(person.to_string(), "Davyd-20-Ternopil00758");
+        Ok(())
+    }
+
+    #[test]
+    fn parsing_unnormal2() -> anyhow::Result<()> {
+        let person = parse("Dav-+yd-2/0Lv/iv*75hgf86l+9")?;
+        println!("{}", person.to_string());
+        assert_eq!(person.to_string(), "Davyd-20-Lviv75869");
         Ok(())
     }
 

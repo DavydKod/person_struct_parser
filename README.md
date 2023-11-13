@@ -7,13 +7,15 @@
 
 Person_struct_parser(PSP) is a parsing library for parsing a String into a person object.
 
-- PSP has structure **Person**(`person_struct_parser::person_module::Person`) for containing the information about a person(name,age,city)
+- PSP has structure **Person**(`person_struct_parser::person_module::Person`) for containing the information about a person(name,age,city,zip) and zip_is_ua(true if zip is UA)
 
 ```rust
 pub struct Person {
         pub name: String,
         pub age: u32,
         pub city: String,
+        pub zip: u32,
+        pub zip_is_ua: bool,
     }
 ```
 
@@ -43,23 +45,25 @@ all_characters_without_alpha = { non_alpha+ }
 
 name = {(all_characters_without_digits)+ ~ (alpha)+ ~ (all_characters_without_digits)+}
 age = {(all_characters_without_alpha)+ ~ (digit)+ ~ (all_characters_without_alpha)+}
-city = {(all_characters_without_digits)+ ~ (alpha)+ ~ (all_characters_without_digits)+}
-person = {name ~ age ~ city}
+city = {(all_characters_without_digits)+ ~ (alpha)+ ~ .+}
+zip = {.+ ~ (digit)+ ~ .+}
+
+person = {name ~ age ~ city ~ zip}
 ```
 
 ## Example
 
-- **Normalization**. To normalize person object. Next example will print `Roman-21-Paris`:
+- **Normalization**. To normalize person object. Next example will print `Roman-21-Paris54586`:
 
 ```rust
-let mut person = Person{name:String::from("RoMAn"),age:21,city:String::from("PaRiS")};
+let mut person = Person{name:String::from("RoMAn"),age:21,city:String::from("PaRiS"),zip:54586};
 println!("{}",person.normalize());
 ```
 
-- **Parsing**. Next example will print `Roman-21-Paris` because of parsing and normalization after:
+- **Parsing**. Next example will print `Roman-21-Paris54586` because of parsing and normalization after:
 
 ```rust
-println!("{}",parse("-+Ro*Ma/N//2*+-1..PaR*I-s-").unwrap());
+println!("{}",parse("-+Ro*Ma/N//2*+-1..PaR*I-s-54+gh5h-+h8ghj6").unwrap());
 ```
 
 - **CLI**. You can execute `cargo run -- -i your_file_name.txt` in command prompt to parse the content of your file. If there is a problem it will parse the appropriate default file. Also there are more commands - try `cargo run -- --help` for more info.

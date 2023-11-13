@@ -7,5 +7,7 @@ all_characters_without_alpha = { non_alpha+ }
 
 name = {(all_characters_without_digits)+ ~ (alpha)+ ~ (all_characters_without_digits)+}
 age = {(all_characters_without_alpha)+ ~ (digit)+ ~ (all_characters_without_alpha)+}
-city = {(all_characters_without_digits)+ ~ (alpha)+ ~ (all_characters_without_digits)+}
-person = {name ~ age ~ city}
+city = {(all_characters_without_digits)+ ~ (alpha)+ ~ .+}
+zip = {.+ ~ (digit)+ ~ .+}
+
+person = {name ~ age ~ city ~ zip}

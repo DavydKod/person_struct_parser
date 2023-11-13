@@ -1,10 +1,11 @@
 [package]
 name = "person_struct_parser"
-version = "1.1.1"
+version = "1.1.2"
 edition = "2021"
 authors = ["DavydKod"]
-description = "Rust parser for person struct  #parser #grammar #person_struct"
+description = "Rust parser for person struct"
 license = "MIT"
+keywords = ["parser","grammar","person_struct","person_parser"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

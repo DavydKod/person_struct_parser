@@ -6,10 +6,12 @@ use std::fs;
 
 ///This is the main function that works as CLI
 pub fn main() -> anyhow::Result<()> {
-    let matches = App::new("My CLI Program")
-        .version("1.0")
-        .author("DavydKod")
-        .about("CLI for parsing content of the file")
+    let my_version = &*format!("Version: {}", env!("CARGO_PKG_VERSION"));
+    let my_author = &*format!("Author: {}", env!("CARGO_PKG_AUTHORS"));
+    let matches = App::new("CLI Program")
+        .version(my_version)
+        .author(my_author)
+        .about("This CLI is for parsing content of the file")
         .arg(
             Arg::with_name("input")
                 .short("i")
@@ -29,7 +31,14 @@ pub fn main() -> anyhow::Result<()> {
     };
 
     match parse(&file_content) {
-        Ok(result) => println!("Parsed successfully parsed: {}", result),
+        Ok(result) => {
+            println!("CLI program");
+            println!("{}", my_version);
+            println!("{}", my_author);
+            println!("This CLI is for parsing content of the file");
+            println!("Parsed successfully");
+            println!("Parsed: {}", result);
+        }
         Err(err) => {
             eprintln!("Error during the parsing: {:?}", err);
             return Err(anyhow!(err));

@@ -11,6 +11,9 @@ pub mod person_module {
         ///Error for the situation when the field from input string is incorrect
         #[error("An error occurred incorrect field: {0}")]
         IncorrectField(String),
+        ///File error
+        #[error("An error occurred incorrect file: {0}")]
+        IncorrectFile(String),
     }
 
     ///A struct to contain the information about a person such as name, age,city and zip
@@ -23,8 +26,6 @@ pub mod person_module {
         pub city: String,
         ///zip
         pub zip: u32,
-        ///if zip is Ukrainian
-        pub zip_is_ua: bool,
     }
     impl std::fmt::Display for Person {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -37,7 +38,7 @@ pub mod person_module {
                     norm_zip = String::from("00000");
                 }
             }
-            write!(f, "{}-{}-{}{}", self.name, self.age, self.city, norm_zip)
+            write!(f, "{} {} {}{}", self.name, self.age, self.city, norm_zip)
         }
     }
 
@@ -56,11 +57,26 @@ pub mod person_module {
                 self.city.remove(0);
                 self.city.insert(0, s);
             }
+            let mut modified_city = String::new();
+            let mut must_be_high = true; // починаємо з великої літери
+
+            for s in self.city.chars() {
+                if must_be_high {
+                    modified_city.push_str(&s.to_uppercase().to_string());
+                    must_be_high = false;
+                } else {
+                    modified_city.push(s);
+                }
+
+                if s == ' ' || s == '-' {
+                    must_be_high = true;
+                }
+            }
+
+            self.city = modified_city;
             if self.zip > 99999 {
                 self.zip = 0;
             }
-            //range of Ukrainian zip
-            self.zip_is_ua = !(self.zip < 7000 || self.zip > 98999);
             self
         }
     }
@@ -75,6 +91,8 @@ pub mod person_module {
         let mut has_age = false;
         let mut has_city = false;
         let mut has_zip = false;
+        let mut city_gaps = 0;
+        let mut city_hyphens = 0;
 
         for s in String::from(string).chars() {
             if !has_name {
@@ -89,12 +107,22 @@ pub mod person_module {
                 has_city = true;
             } else if has_city && !has_zip && s.is_ascii_digit() {
                 has_zip = true;
+            } else if has_city && !has_zip {
+                if s == '-' {
+                    city_hyphens += 1;
+                } else if s == ' ' {
+                    city_gaps += 1;
+                }
             }
         }
 
         if !has_age {
             return Err(MyError::IncorrectField("age".to_string()));
-        } else if !has_city {
+        } else if !has_city
+            || city_gaps > 1
+            || city_hyphens > 1
+            || (city_gaps == 1 && city_hyphens == 1)
+        {
             return Err(MyError::IncorrectField("city".to_string()));
         } else if !has_name {
             return Err(MyError::IncorrectField("name".to_string()));
@@ -108,7 +136,10 @@ pub mod person_module {
         let mut must_be_zip = false;
 
         for s in String::from(string).chars() {
-            if !s.is_ascii_digit() && !s.is_ascii_alphabetic() {
+            if !s.is_ascii_digit()
+                && !s.is_ascii_alphabetic()
+                && !(must_be_city && (s == ' ' || s == '-'))
+            {
             } else if must_be_name {
                 if s.is_ascii_alphabetic() {
                     tname.push(s);
@@ -130,7 +161,7 @@ pub mod person_module {
                     must_be_city = true;
                 }
             } else if must_be_city {
-                if s.is_ascii_alphabetic() {
+                if s.is_ascii_alphabetic() || ((s == '-' || s == ' ') && tcity.len() > 2) {
                     tcity.push(s);
                 } else {
                     must_be_city = false;
@@ -167,7 +198,7 @@ pub mod person_module {
         let norm_zip: u32 = match unnorm_zip {
             Ok(value) => value,
             Err(_) => {
-                let err = MyError::PSPError("Invalid age parsing".to_string());
+                let err = MyError::PSPError("Invalid zip parsing".to_string());
                 return Err(err);
             }
         };
@@ -176,7 +207,6 @@ pub mod person_module {
             age: norm_age,
             city: tcity,
             zip: norm_zip,
-            zip_is_ua: true,
         };
         person.normalize();
         Ok(person)

@@ -33,22 +33,20 @@ pub fn parse(string: &str) -> anyhow::Result<Person>
 
 - `std::fmt::Display` is implemented for **Person**
 
-- The **grammar** for parsing is placed in `grammar.pest` file in `src` folder. Grammar:
+- **Grammar** for parsing:
 
 ```pest
-alpha = { 'a'..'z' | 'A'..'Z' }
-digit = { '0'..'9' }
-non_digit = { !digit ~ . }
-non_alpha = { !alpha ~ . }
-all_characters_without_digits = { non_digit+ }
-all_characters_without_alpha = { non_alpha+ }
+low_alpha = {'a'..'z'}
+high_alpha = {'A'..'Z'}
+digit = {'0'..'9'}
 
-name = {(all_characters_without_digits)+ ~ (alpha)+ ~ (all_characters_without_digits)+}
-age = {(all_characters_without_alpha)+ ~ (digit)+ ~ (all_characters_without_alpha)+}
-city = {(all_characters_without_digits)+ ~ (alpha)+ ~ .+}
-zip = {.+ ~ (digit)+ ~ .+}
+name = {high_alpha ~ low_alpha+}
+age = {digit{1,4}}
+city = {high_alpha ~ ((low_alpha+) | (low_alpha+ ~ ('-' | ' ')* ~ low_alpha+))}
+city = {high_alpha ~ (low_alpha | '-' | ' ')* ~ low_alpha}
+zip = {digit{5}}
 
-person = {name ~ age ~ city ~ zip}
+person = {name ~ ' ' ~ age ~ ' ' ~ city ~ zip}
 ```
 
 ## Example

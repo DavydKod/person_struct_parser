@@ -11,9 +11,8 @@ mod simple_tests {
             age: 23,
             city: String::from("cORuSAnT"),
             zip: 51415,
-            zip_is_ua: true,
         };
-        assert_eq!(p.normalize().to_string(), "Anakin-23-Corusant51415");
+        assert_eq!(p.normalize().to_string(), "Anakin 23 Corusant51415");
 
         Ok(())
     }

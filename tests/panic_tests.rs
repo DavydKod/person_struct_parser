@@ -14,4 +14,9 @@ mod simple_tests {
     fn incorrect() {
         let _person: Person = parse("25").unwrap();
     }
+    #[test]
+    #[should_panic]
+    fn parsing_inc() {
+        let _person: Person = parse("Davyd 20 Win+/sto++/n-S ?,?(al*)*e*m75869").unwrap();
+    }
 }

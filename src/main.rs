@@ -1,11 +1,10 @@
 use person_struct_parser::person_module::*;
 extern crate clap;
-use anyhow::anyhow;
 use clap::{App, Arg};
 use std::fs;
 
 ///This is the main function that works as CLI
-pub fn main() -> anyhow::Result<()> {
+pub fn main() -> Result<(), MyError> {
     let my_version = &*format!("Version: {}", env!("CARGO_PKG_VERSION"));
     let my_author = &*format!("Author: {}", env!("CARGO_PKG_AUTHORS"));
     let matches = App::new("CLI Program")
@@ -27,7 +26,7 @@ pub fn main() -> anyhow::Result<()> {
         .unwrap_or("ExampleInputForCLI.txt");
     let file_content = match fs::read_to_string(input_file) {
         Ok(content) => content,
-        Err(err) => return Err(anyhow!(err)),
+        Err(_) => return Err(MyError::IncorrectFile("File error".to_string())),
     };
 
     match parse(&file_content) {
@@ -39,9 +38,8 @@ pub fn main() -> anyhow::Result<()> {
             println!("Parsed successfully");
             println!("Parsed: {}", result);
         }
-        Err(err) => {
-            eprintln!("Error during the parsing: {:?}", err);
-            return Err(anyhow!(err));
+        Err(_) => {
+            return Err(MyError::PSPError("Parsing error".to_string()));
         }
     }
     Ok(())

@@ -42,7 +42,7 @@ digit = {'0'..'9'}
 
 name = {high_alpha ~ low_alpha+}
 age = {digit{1,4}}
-city = {high_alpha ~ ((low_alpha+) | (low_alpha+ ~ ('-' | ' ')* ~ low_alpha+))}
+city = {high_alpha ~ ((low_alpha+) | (low_alpha+ ~ ('-' | ' ') ~ low_alpha+))}
 city = {high_alpha ~ (low_alpha | '-' | ' ')* ~ low_alpha}
 zip = {digit{5}}
 

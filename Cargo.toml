@@ -1,6 +1,6 @@
 [package]
 name = "person_struct_parser"
-version = "1.2.2"
+version = "1.2.3"
 edition = "2021"
 authors = ["DavydKod"]
 description = "Rust parser for person struct"

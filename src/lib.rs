@@ -57,6 +57,9 @@ pub mod person_module {
                 self.city.remove(0);
                 self.city.insert(0, s);
             }
+            if self.age > 999 {
+                self.age = 0;
+            }
             let mut modified_city = String::new();
             let mut must_be_high = true; // починаємо з великої літери
 

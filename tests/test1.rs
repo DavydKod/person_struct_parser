@@ -24,6 +24,13 @@ mod simple_tests {
     }
 
     #[test]
+    fn parsing_unnormal_age() -> anyhow::Result<()> {
+        let person = parse("Davyd 2000 Lviv75869")?;
+        assert_eq!(person.to_string(), "Davyd 0 Lviv75869");
+        Ok(())
+    }
+
+    #[test]
     fn parsing_normal0() -> anyhow::Result<()> {
         let person = parse("Davyd 20 Win+/sto++/n-S?,?(al*)*e*m75869")?;
         assert_eq!(person.to_string(), "Davyd 20 Winston-Salem75869");

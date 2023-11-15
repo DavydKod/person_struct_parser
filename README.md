@@ -56,10 +56,10 @@ person = {name ~ ' ' ~ age ~ ' ' ~ city ~ zip ~ ' ' ~ phone_number}
 
 ## Example
 
-- **Normalization**. To normalize person object. Next example will print `Roman-21-Paris54586`:
+- **Normalization**. To normalize person object. Next example will print `Roman-21-Paris54586 +380546548577`:
 
 ```rust
-let mut person = Person{name:String::from("RoMAn"),age:21,city:String::from("PaRiS"),zip:54586};
+let mut person = Person{name:String::from("RoMAn"),age:21,city:String::from("PaRiS"),zip:54586,phone:"+380546548577"};
 println!("{}",person.normalize());
 ```
 

@@ -1,5 +1,7 @@
 ///Main module that contains all useful elements like Person struct, parse func etc
 pub mod person_module {
+    use std::fs::File;
+    use std::io::prelude::*;
     use thiserror::Error;
 
     ///My error type using thiserror to handle error situations
@@ -213,5 +215,25 @@ pub mod person_module {
         };
         person.normalize();
         Ok(person)
+    }
+
+    ///Function to parse content and write it to the file
+    pub fn write_to_file(file_path: &str, content: &str) -> Result<(), MyError> {
+        let mut file = match File::create(file_path) {
+            Ok(file) => file,
+            Err(_) => return Err(MyError::IncorrectFile("CreateError".to_string())),
+        };
+        let person = parse(content);
+
+        match person {
+            Ok(_) => {}
+            Err(_) => return Err(MyError::PSPError("ParseToFile".to_string())),
+        }
+        let str_person = format!("{}", person.unwrap());
+
+        match file.write_all(str_person.as_bytes()) {
+            Ok(_) => Ok(()),
+            Err(_) => Err(MyError::IncorrectFile("WriteError".to_string())),
+        }
     }
 }

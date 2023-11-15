@@ -16,9 +16,12 @@ pub mod person_module {
         ///File error
         #[error("An error occurred incorrect file: {0}")]
         IncorrectFile(String),
+        ///File error while writing
+        #[error("An error occurred incorrect file: {0}")]
+        IncorrectWriteFile(#[from] std::io::Error),
     }
 
-    ///A struct to contain the information about a person such as name, age,city and zip
+    ///A struct to contain the information about a person such as name, age,city, zip and phone_number
     pub struct Person {
         ///name of the person
         pub name: String,
@@ -28,6 +31,8 @@ pub mod person_module {
         pub city: String,
         ///zip
         pub zip: u32,
+        ///phone number
+        pub phone: String,
     }
     impl std::fmt::Display for Person {
         fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -40,7 +45,11 @@ pub mod person_module {
                     norm_zip = String::from("00000");
                 }
             }
-            write!(f, "{} {} {}{}", self.name, self.age, self.city, norm_zip)
+            write!(
+                f,
+                "{} {} {}{} {}",
+                self.name, self.age, self.city, norm_zip, self.phone
+            )
         }
     }
 
@@ -63,7 +72,7 @@ pub mod person_module {
                 self.age = 0;
             }
             let mut modified_city = String::new();
-            let mut must_be_high = true; // починаємо з великої літери
+            let mut must_be_high = true;
 
             for s in self.city.chars() {
                 if must_be_high {
@@ -91,6 +100,7 @@ pub mod person_module {
         let mut tage = String::from("");
         let mut tcity = String::from("");
         let mut tzip = String::from("");
+        let mut tphone = String::from("+");
 
         let mut has_name = false;
         let mut has_age = false;
@@ -98,6 +108,7 @@ pub mod person_module {
         let mut has_zip = false;
         let mut city_gaps = 0;
         let mut city_hyphens = 0;
+        let mut has_phone = false;
 
         for s in String::from(string).chars() {
             if !has_name {
@@ -118,6 +129,8 @@ pub mod person_module {
                 } else if s == ' ' {
                     city_gaps += 1;
                 }
+            } else if has_zip && s == '+' {
+                has_phone = true;
             }
         }
 
@@ -133,18 +146,25 @@ pub mod person_module {
             return Err(MyError::IncorrectField("name".to_string()));
         } else if !has_zip {
             return Err(MyError::IncorrectField("zip".to_string()));
+        } else if !has_phone {
+            return Err(MyError::IncorrectField("phone number".to_string()));
         }
 
         let mut must_be_name = true;
         let mut must_be_age = false;
         let mut must_be_city = false;
         let mut must_be_zip = false;
+        let mut must_be_phone = false;
 
         for s in String::from(string).chars() {
             if !s.is_ascii_digit()
                 && !s.is_ascii_alphabetic()
                 && !(must_be_city && (s == ' ' || s == '-'))
             {
+                if s == '+' && must_be_zip {
+                    must_be_zip = false;
+                    must_be_phone = true;
+                }
             } else if must_be_name {
                 if s.is_ascii_alphabetic() {
                     tname.push(s);
@@ -177,6 +197,8 @@ pub mod person_module {
                 }
             } else if must_be_zip && s.is_ascii_digit() {
                 tzip.push(s);
+            } else if must_be_phone && s.is_ascii_digit() {
+                tphone.push(s);
             }
         }
 
@@ -188,6 +210,8 @@ pub mod person_module {
             return Err(MyError::IncorrectField("name".to_string()));
         } else if tzip.is_empty() {
             return Err(MyError::IncorrectField("zip".to_string()));
+        } else if tphone.is_empty() {
+            return Err(MyError::IncorrectField("phone number".to_string()));
         }
 
         let unnorm_age = tage.parse::<u32>();
@@ -212,6 +236,7 @@ pub mod person_module {
             age: norm_age,
             city: tcity,
             zip: norm_zip,
+            phone: tphone,
         };
         person.normalize();
         Ok(person)
@@ -219,10 +244,7 @@ pub mod person_module {
 
     ///Function to parse content and write it to the file
     pub fn write_to_file(file_path: &str, content: &str) -> Result<(), MyError> {
-        let mut file = match File::create(file_path) {
-            Ok(file) => file,
-            Err(_) => return Err(MyError::IncorrectFile("CreateError".to_string())),
-        };
+        let mut file = File::create(file_path).map_err(MyError::IncorrectWriteFile)?;
         let person = parse(content);
 
         match person {
@@ -231,9 +253,8 @@ pub mod person_module {
         }
         let str_person = format!("{}", person.unwrap());
 
-        match file.write_all(str_person.as_bytes()) {
-            Ok(_) => Ok(()),
-            Err(_) => Err(MyError::IncorrectFile("WriteError".to_string())),
-        }
+        file.write_all(str_person.as_bytes())
+            .map_err(MyError::IncorrectWriteFile)?;
+        Ok(())
     }
 }

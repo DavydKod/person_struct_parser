@@ -7,15 +7,20 @@
 
 Person_struct_parser(PSP) is a parsing library for parsing a String into a person object.
 
-- PSP has structure **Person**(`person_struct_parser::person_module::Person`) for containing the information about a person(name,age,city,zip) and zip_is_ua(true if zip is UA)
+- PSP has structure **Person**(`person_struct_parser::person_module::Person`) for containing the information about a person(name,age,city,zip,phone_number)
 
 ```rust
 pub struct Person {
+        ///name of the person
         pub name: String,
+        ///age of the person
         pub age: u32,
+        ///city where the person lives
         pub city: String,
+        ///zip
         pub zip: u32,
-        pub zip_is_ua: bool,
+        ///phone number
+        pub phone: String
     }
 ```
 
@@ -44,8 +49,9 @@ name = {high_alpha ~ low_alpha+}
 age = {digit{1,4}}
 city = {high_alpha ~ (low_alpha+ | (low_alpha+ ~ ('-' | ' ') ~ low_alpha+))}
 zip = {digit{5}}
+phone_number = {'+' ~ (digit{12} | digit{10})}
 
-person = {name ~ ' ' ~ age ~ ' ' ~ city ~ zip}
+person = {name ~ ' ' ~ age ~ ' ' ~ city ~ zip ~ ' ' ~ phone_number}
 ```
 
 ## Example
@@ -57,13 +63,13 @@ let mut person = Person{name:String::from("RoMAn"),age:21,city:String::from("PaR
 println!("{}",person.normalize());
 ```
 
-- **Parsing**. Next example will print `Roman-21-Paris54586` because of parsing and normalization after:
+- **Parsing**. Next example will print `Roman-21-Paris54586 +380426458777` because of parsing and normalization after:
 
 ```rust
-println!("{}",parse("-+Ro*Ma/N//2*+-1..PaR*I-s-54+gh5h-+h8ghj6").unwrap());
+println!("{}",parse("-Ro*Ma/N//2*-1..PaR*I-s-54gh5h-h8ghj6 --+3804-2/64/58-*777").unwrap());
 ```
 
-- **CLI**. You can execute `cargo run -- -i your_file_name.txt` in command prompt to parse the content of your file. If there is a problem it will parse the appropriate default file. Also there are more commands - try `cargo run -- --help` for more info.
+- **CLI**. You can execute `cargo run -- -i your_file_name.txt` in command prompt to parse the content of your file. If there is a problem it will parse the appropriate default file. The result will be placed in Result.txt Also there are more commands - try `cargo run -- --help` for more info.
 
 ## Custom Error
 

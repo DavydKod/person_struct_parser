@@ -3,7 +3,7 @@ extern crate clap;
 use clap::{App, Arg};
 use std::fs;
 
-///This is the main function that works as CLI
+///This is the main function that works as CLI (it reads your file, parse it and write the result to Result.txt)
 pub fn main() -> Result<(), MyError> {
     let my_version = &*format!("Version: {}", env!("CARGO_PKG_VERSION"));
     let my_author = &*format!("Author: {}", env!("CARGO_PKG_AUTHORS"));
@@ -37,6 +37,7 @@ pub fn main() -> Result<(), MyError> {
             println!("This CLI is for parsing content of the file");
             println!("Parsed successfully");
             println!("Parsed: {}", result);
+            let _ = write_to_file("Result.txt", &format!("{}", result).to_string());
         }
         Err(_) => {
             return Err(MyError::PSPError("Parsing error".to_string()));
